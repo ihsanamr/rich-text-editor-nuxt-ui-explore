@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// Demo <UEditor> Nuxt UI: markdown, text-align, highlight, upload gambar lokal,slash command, dan drag-and-drop blok.
 import type { Editor } from "@tiptap/vue-3";
 import { TextAlign } from "@tiptap/extension-text-align";
 import { Highlight } from "@tiptap/extension-highlight";
@@ -27,7 +26,7 @@ const extensions = [
   ImageUpload,
 ];
 
-// Handler untuk fitur yang tidak disediakan UEditor secara bawaan.
+// Handler untuk fitur yang tidak disediakan UEditor secara default.
 const customHandlers = {
   highlight: {
     canExecute: (editor: Editor) => editor.can().toggleHighlight(),
@@ -44,7 +43,7 @@ const customHandlers = {
   },
 } satisfies EditorCustomHandlers;
 
-// Array-of-array: array luar = grup tombol, array dalam = tombol per grup.
+// Array-of-array: array luar = grup button, array dalam = button per grup.
 const toolbarItems: EditorToolbarItem<typeof customHandlers>[][] = [
   [
     { kind: "undo", icon: "i-lucide-undo", tooltip: { text: "Undo" } },
@@ -197,7 +196,7 @@ const toolbarItems: EditorToolbarItem<typeof customHandlers>[][] = [
   ],
 ];
 
-// Item menu slash command; `type: 'label'` jadi judul seksi.
+// Item menu slash command; `type: 'label'` jadi judul section.
 const suggestionItems: EditorSuggestionMenuItem[][] = [
   [
     { type: "label", label: "Text" },
@@ -290,7 +289,6 @@ async function copyMarkdown() {
         </UEditor>
       </UCard>
 
-      <!-- Menampilkan serialisasi markdown dari v-model secara live. -->
       <UCard>
         <template #header>
           <div class="flex items-center justify-between">

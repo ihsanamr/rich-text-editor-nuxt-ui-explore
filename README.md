@@ -9,9 +9,11 @@ Project ini mencoba fitur-fitur editor: markdown, perataan teks, highlight, uplo
 - **Markdown content**: `v-model` berupa string markdown, dengan panel output live + tombol copy.
 - **Toolbar lengkap**: undo/redo, heading, list, blockquote, code block, divider, format teks (bold, italic, underline, strike, code), highlight, text align, link, dan gambar.
 - **Text align & highlight**: lewat extension TipTap `@tiptap/extension-text-align` dan `@tiptap/extension-highlight`.
-- **Upload gambar lokal**: custom TipTap node (`imageUpload`) yang di-render oleh komponen Vue `<UFileUpload>`, lalu diganti dengan node `Image` biasa setelah file dipilih.
+- **Upload gambar lokal**: custom TipTap node (`imageUpload`) yang di-render oleh komponen Vue `<UFileUpload>`. File dibaca jadi data URL, lalu node diganti dengan node `Image` biasa.
 - **Slash command menu**: muncul saat mengetik `/` pada baris kosong.
 - **Drag handle**: mengurutkan blok dengan drag-and-drop.
+
+> Catatan: upload gambar berjalan sepenuhnya di sisi klien (file dibaca jadi data URL, tanpa backend) dan diberi delay buatan 1 detik untuk mensimulasikan proses upload.
 
 ## Tech Stack
 
@@ -37,7 +39,7 @@ ui-editor-exploration/
 │   └── pages/
 │       └── index.vue                 # Halaman utama: demo/pembahasan <UEditor>
 ├── public/                           # Aset statis (favicon.ico, robots.txt)
-├── nuxt.config.ts                    # Konfigurasi Nuxt (modul, CSS, devServer, Vite)
+├── nuxt.config.ts                    # Konfigurasi Nuxt (modul, CSS, Vite)
 ├── tsconfig.json                     # TS config (mereferensikan .nuxt/tsconfig.*)
 ├── package.json                      # Dependency & script npm
 └── README.md
@@ -48,7 +50,7 @@ ui-editor-exploration/
 - **`app/pages/index.vue`**: inti eksplorasi. Mendefinisikan `content` (v-model markdown), `extensions` TipTap, `customHandlers` (`highlight` & `imageUpload`), `toolbarItems`, dan `suggestionItems` (menu slash command).
 - **`app/components/EditorImageUploadExtension.ts`**: mendefinisikan custom node TipTap `imageUpload` (tipe atom + draggable) beserta perintah `insertImageUpload()`, dan merender tampilannya lewat komponen Vue.
 - **`app/components/EditorImageUploadNode.vue`**: node view-nya: menampilkan `<UFileUpload>`, membaca file jadi data URL via `FileReader`, lalu mengganti node dengan gambar (`setImage`).
-- **`nuxt.config.ts`**: mendaftarkan `@nuxt/ui`, memuat CSS global, dan menyetel `vite.optimizeDeps` untuk ProseMirror (lihat catatan di bawah).
+- **`nuxt.config.ts`**: mendaftarkan `@nuxt/ui`, memuat CSS global, dan menyetel `vite.optimizeDeps` untuk ProseMirror.
 
 ## Menjalankan di Lokal
 
@@ -71,19 +73,15 @@ npm run dev
 
 ### Script yang tersedia
 
-| Perintah            | Fungsi                                        |
-| ------------------- | --------------------------------------------- |
-| `npm run dev`       | Menjalankan dev server (hot reload)           |
-| `npm run build`     | Build untuk produksi                         |
-| `npm run generate`  | Generate static site                          |
-| `npm run preview`   | Menjalankan hasil build secara lokal          |
+| Perintah              | Fungsi                                           |
+| --------------------- | ------------------------------------------------ |
+| `npm run dev`         | Menjalankan dev server (hot reload)              |
+| `npm run build`       | Build untuk produksi                            |
+| `npm run generate`    | Generate static site                             |
+| `npm run preview`     | Menjalankan hasil build secara lokal             |
 | `npm run postinstall` | Menyiapkan Nuxt (`nuxt prepare`) setelah install |
 
 Menggunakan pnpm / yarn / bun? Ganti `npm <script>` menjadi `pnpm <script>` / `yarn <script>` / `bun run <script>`.
-
-## Catatan Konfigurasi
-
-**`vite.optimizeDeps.include` untuk ProseMirror**: memastikan ProseMirror di-pre-bundle sebagai satu instance, mencegah error `"Adding different instances of a keyed plugin"`.
 
 ## Referensi
 
